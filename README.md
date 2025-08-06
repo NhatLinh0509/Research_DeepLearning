@@ -24,15 +24,12 @@ Toàn bộ ví dụ kết quả dưới đây được tạo từ model này.
 README.md: Tài liệu này.
 
 🛠 Cách sử dụng
-python
-Sao chép
-Chỉnh sửa
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
 import requests
 
-processor = BlipProcessor.from_pretrained("nhatlinh59/blip-flickr30k-model1")
-model = BlipForConditionalGeneration.from_pretrained("nhatlinh59/blip-flickr30k-model1")
+processor = BlipProcessor.from_pretrained("nhatlinh59/blip-finetuned-part9")
+model = BlipForConditionalGeneration.from_pretrained("nhatlinh59/blip-finetuned-part9")
 
 img_url = "https://example.com/sample.jpg"
 image = Image.open(requests.get(img_url, stream=True).raw)
@@ -42,6 +39,7 @@ out = model.generate(**inputs)
 caption = processor.decode(out[0], skip_special_tokens=True)
 
 print(caption)
+
 📸 Kết quả mẫu
 Ví dụ 1
 <img width="1054" height="546" alt="image" src="https://github.com/user-attachments/assets/cb806f81-0dd2-4c76-a1a6-c49aa1b5d475" />
@@ -54,13 +52,40 @@ Ví dụ 2
 a little girl in a gray sweater and jeans is playing on a bed.
 
 📊 Thông tin huấn luyện
-Thuật toán: Fine-tuning BLIP (Bootstrapping Language-Image Pre-training) với Transformer Decoder.
 
-Batch size: 4
+img_dir = "/kaggle/input/flickr-image-dataset/flickr30k_images/flickr30k_images"
+batch_size = 4
+epoch_per_part = 1
 
-Optimizer: AdamW
+for i in range(num_parts):
+    print(f"\n🔁 Huấn luyện phần {i}")
+    dataset = Flickr30kDataset(f"splits/train_part_{i}.csv", img_dir, processor)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=2)
 
-Loss: Cross-Entropy Loss
+    model.train()
+    for epoch in range(epoch_per_part):
+        loop = tqdm(dataloader)
+        for batch in loop:
+            input_ids = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
+            pixel_values = batch["pixel_values"].to(device)
+            labels = input_ids.clone()
 
-Epochs: Chia dữ liệu thành nhiều phần, huấn luyện theo từng phần để tránh quá tải bộ nhớ.
+            outputs = model(pixel_values=pixel_values,
+                            input_ids=input_ids,
+                            attention_mask=attention_mask,
+                            labels=labels)
+
+            loss = outputs.loss
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+
+            loop.set_description(f"Part {i}")
+            loop.set_postfix(loss=loss.item())
+
+    path = f"/kaggle/working/blip-finetuned-part{i}"
+    model.save_pretrained(path)
+    processor.save_pretrained(path)
+    print(f"✅ Đã lưu tại: {path}")
 
