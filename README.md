@@ -24,6 +24,7 @@ Toàn bộ ví dụ kết quả dưới đây được tạo từ model này.
 README.md: Tài liệu này.
 
 🛠 Cách sử dụng
+
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
 import requests
