@@ -25,6 +25,7 @@ README.md: Tài liệu này.
 
 🛠 Cách sử dụng
 
+
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
 import requests
