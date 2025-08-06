@@ -25,7 +25,8 @@ README.md: Tài liệu này.
 
 🛠 Cách sử dụng
 
-<pre> ```python from transformers import BlipProcessor, BlipForConditionalGeneration from PIL import Image import requests processor = BlipProcessor.from_pretrained("nhatlinh59/blip-finetuned-part9") model = BlipForConditionalGeneration.from_pretrained("nhatlinh59/blip-finetuned-part9") img_url = "https://example.com/sample.jpg" image = Image.open(requests.get(img_url, stream=True).raw) inputs = processor(images=image, return_tensors="pt") out = model.generate(**inputs) caption = processor.decode(out[0], skip_special_tokens=True) print(caption) ``` </pre>
+<pre> ```python 
+  from transformers import BlipProcessor, BlipForConditionalGeneration from PIL import Image import requests processor = BlipProcessor.from_pretrained("nhatlinh59/blip-finetuned-part9") model = BlipForConditionalGeneration.from_pretrained("nhatlinh59/blip-finetuned-part9") img_url = "https://example.com/sample.jpg" image = Image.open(requests.get(img_url, stream=True).raw) inputs = processor(images=image, return_tensors="pt") out = model.generate(**inputs) caption = processor.decode(out[0], skip_special_tokens=True) print(caption) ``` </pre>
 
 📸 Kết quả mẫu
 Ví dụ 1
