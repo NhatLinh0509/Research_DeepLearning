@@ -45,12 +45,15 @@ print(caption)
 
 
 📸 Kết quả mẫu
+
 Ví dụ 1
 <img width="1054" height="546" alt="image" src="https://github.com/user-attachments/assets/cb806f81-0dd2-4c76-a1a6-c49aa1b5d475" />
 
 a group of asian people posing for a picture.
 
 Ví dụ 2
+
+
 <img width="621" height="517" alt="image" src="https://github.com/user-attachments/assets/9b9e4fe3-c184-4c72-a313-fcc047a5c95d" />
 
 a little girl in a gray sweater and jeans is playing on a bed.
